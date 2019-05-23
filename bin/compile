@@ -302,7 +302,12 @@ fi
 
 echo "-----> Making cabal sandbox available to Heroku command line"
 if [ -d $WORKING_HOME/.cabal-sandbox ]; then
-  find $WORKING_HOME/.cabal-sandbox/lib/ -name "*.a" -delete
+  find $WORKING_HOME/.cabal-sandbox/lib -name "*.a" -delete
+  if [[ -z "$INCLUDE_GHC" ]]
+  then
+    find $WORKING_HOME/.cabal-sandbox/lib '(' -name "*.o" -o -name "*.hi" -o -name "*.dyn_hi" ')' -delete
+    find $WORKING_HOME/.cabal-sandbox/lib -type d -empty -delete
+  fi
   cp -R $WORKING_HOME/.cabal-sandbox $BUILD_DIR
 fi
 
