@@ -284,19 +284,25 @@ fi
 
 echo "-----> Making GHC binaries available to Heroku command line"
 mkdir -p $BUILD_DIR/vendor
-mv $WORKING_HOME/vendor/ghc-libs $BUILD_DIR/vendor
-mv $WORKING_HOME/vendor/ghc-utils $BUILD_DIR/vendor
-mv $WORKING_HOME/vendor/ghc-includes $BUILD_DIR/vendor
-mv $WORKING_HOME/vendor/ghc-$GHC_VER $BUILD_DIR/vendor
-mv $WORKING_HOME/vendor/cabal-install-$CABAL_VER $BUILD_DIR/vendor
 
-echo "-----> Making cabal config available to Heroku command line"
-if [ -d $WORKING_HOME/.cabal ]; then
-  mv $WORKING_HOME/.cabal $BUILD_DIR
+# Include ghc-libs because of libgmp
+mv $WORKING_HOME/vendor/ghc-libs $BUILD_DIR/vendor
+
+if [[ -n "$INCLUDE_GHC" ]]
+then
+  mv $WORKING_HOME/vendor/ghc-utils $BUILD_DIR/vendor
+  mv $WORKING_HOME/vendor/ghc-includes $BUILD_DIR/vendor
+  mv $WORKING_HOME/vendor/ghc-$GHC_VER $BUILD_DIR/vendor
+  mv $WORKING_HOME/vendor/cabal-install-$CABAL_VER $BUILD_DIR/vendor
+  if [ -d $WORKING_HOME/.cabal ]; then
+    echo "-----> Making cabal config available to Heroku command line"
+    mv $WORKING_HOME/.cabal $BUILD_DIR
+  fi
 fi
 
 echo "-----> Making cabal sandbox available to Heroku command line"
 if [ -d $WORKING_HOME/.cabal-sandbox ]; then
+  find $WORKING_HOME/.cabal-sandbox/lib/ -name "*.a" -delete
   cp -R $WORKING_HOME/.cabal-sandbox $BUILD_DIR
 fi
 
