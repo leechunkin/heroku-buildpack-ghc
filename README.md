@@ -28,13 +28,13 @@ machine, then do this:
 # Generate a barebones snap app called snapdemo
 
 mkdir snapdemo && cd $_
-cabal sandbox init
-cabal install snap
-cabal exec snap init barebones
+cabal v1-sandbox init
+cabal v1-install snap
+cabal v1-exec snap init barebones
 
 # Tell Heroku how to start the server
 
-echo 'web: cabal run -- -p $PORT' > Procfile
+echo 'web: cabal v1-run -- -p $PORT' > Procfile
 
 # Create a git repo and deploy!
 
@@ -90,7 +90,7 @@ packages. If you have your app working locally you can constrain the
 remote package versions to match your local environment. Just do this:
 
 ```sh
-cabal freeze
+cabal v1-freeze
 git add cabal.config
 
 # commit and push to fix remote build
@@ -124,12 +124,12 @@ Here are the options
 <tr>
   <td>GHC_VER</td>
   <td>GHC version to download or build</td>
-  <td>7.10.3</td>
+  <td>8.4.4</td>
 </tr>
 <tr>
   <td>CABAL_VER</td>
   <td>Version of cabal-install</td>
-  <td>1.22.8.0</td>
+  <td>2.4.1.0</td>
 </tr>
 <tr>
   <td>PREBUILT</td>
@@ -142,13 +142,8 @@ Here are the options
   <td></td>
 </tr>
 <tr>
-  <td>POST_SCRIPT</td>
-  <td>Path to an executable, relative to checkout root. If present, this will be chmodded (+x) and ran after anything else.</td>
-  <td></td>
-</tr>
-<tr>
   <td>INCLUDE_GHC</td>
-  <td>Make GHC available to Heroku command line. Warning: it makes the slug very bloat.</td>
+  <td>If not empty, GHC environment is available to Heroku command line. It can makes the slug very bloat.</td>
   <td></td>
 </tr>
 </tbody>
@@ -159,12 +154,12 @@ Here are the options
 
 ```sh
 heroku run bash         # shell access
-heroku run cabal repl   # Haskell repl with all app modules loaded
+heroku run cabal v1-repl   # Haskell repl with all app modules loaded
 ```
 
 ### Benefits of this buildpack
 
-* **Latest binaries: GHC 7.10.3, cabal-install 1.22.8.0**
+* **Latest binaries: GHC 8.4.4, cabal-install 2.4.1.0**
 * Uses cabal >=1.20 features to run the app and repl
 * Exposes Haskell platform binaries to your app and scripts
 * Uses prebuilt binaries for speed but...

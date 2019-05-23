@@ -11,8 +11,8 @@ ENV_DIR="$3"
 
 # Default configuration which you can change by setting environment variables
 # e.g. heroku config:set CLEAR_CACHE=1
-GHC_VER=${GHC_VER:-7.10.3}
-CABAL_VER=${CABAL_VER:-1.22.8.0}
+GHC_VER=${GHC_VER:-8.4.4}
+CABAL_VER=${CABAL_VER:-2.4.1.0}
 PREBUILT=${PREBUILT:-https://s3.amazonaws.com/heroku-ghc}
 CLEAR_CACHE=${CLEAR_CACHE:-0}
 
@@ -235,10 +235,10 @@ fi
 ########## project build ###########################################
 
 cd $WORKING_HOME
-cabal sandbox init
+cabal v1-sandbox init
 
 cd $BUILD_DIR
-cabal sandbox init --sandbox $WORKING_HOME/.cabal-sandbox
+cabal v1-sandbox init --sandbox $WORKING_HOME/.cabal-sandbox
 
 if [ -e $CACHE_DIR/.cabal-sandbox ]; then
   echo "-----> Restoring cached cabal sandbox"
@@ -252,18 +252,18 @@ if [ -e "$CABAL_INDEX" ]; then
     idx_date="$(date +%s -r "$CABAL_INDEX")"
     days="$(((now - idx_date) / 60 / 60 / 24))"
     if [ $days -gt 1 ]; then
-        cabal update
+        cabal v1-update
     else
         echo "-----> Nevermind, it's not stale"
     fi
 else
-    cabal update
+    cabal v1-update
 fi
 
 echo "-----> Installing user application"
-cabal configure --disable-library-profiling --disable-executable-profiling --disable-tests --disable-library-coverage --disable-benchmarks --enable-executable-stripping --disable-split-objs || true
-cabal install --only-dependencies --reorder-goals --disable-library-profiling --disable-tests --disable-library-coverage --disable-benchmarks --disable-documentation --disable-split-objs
-cabal build -j
+cabal v1-configure --disable-library-profiling --disable-executable-profiling --disable-tests --disable-library-coverage --disable-benchmarks --enable-executable-stripping --disable-split-objs || true
+cabal v1-install --only-dependencies --reorder-goals --disable-library-profiling --disable-tests --disable-library-coverage --disable-benchmarks --disable-documentation --disable-split-objs
+cabal v1-build -j
 
 # Set context environment variables.
 set-env PATH "/app/vendor/ghc-$GHC_VER/bin:/app/vendor/ghc-utils/bin:/app/vendor/cabal-install-$CABAL_VER/bin"':$PATH'
