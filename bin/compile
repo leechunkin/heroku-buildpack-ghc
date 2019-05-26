@@ -261,7 +261,7 @@ else
 fi
 
 echo "-----> Installing user application"
-cabal v1-configure --disable-library-profiling --disable-executable-profiling --disable-tests --disable-library-coverage --disable-benchmarks --enable-executable-stripping --disable-split-objs || true
+cabal v1-configure --disable-profiling --disable-tests --disable-coverage --disable-benchmarks --enable-executable-stripping --disable-split-objs || true
 cabal v1-install --only-dependencies --reorder-goals --disable-library-profiling --disable-tests --disable-library-coverage --disable-benchmarks --disable-documentation --disable-split-objs
 cabal v1-install -j
 
