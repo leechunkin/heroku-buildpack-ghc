@@ -150,16 +150,17 @@ mkdir -p $WORKING_HOME/vendor/ghc-includes
 echo "-----> Linking libncurses.so in an accessible place"
 ln -s /usr/lib/libncurses.so.5 $WORKING_HOME/vendor/ghc-libs/libtinfo.so.5
 
-LIBFFI_URL="ftp://sourceware.org/pub/libffi/libffi-3.0.13.tar.gz"
-install_prebuilt_library "libffi" "3.0.13" $LIBFFI_URL "libffi-3.0.13" "--enable-static=no"
-if [ -e $CACHE_DIR/libffi-3.0.13/libs ]; then
+LIBFFI_VERSION=3.2.1
+LIBFFI_URL="ftp://sourceware.org/pub/libffi/libffi-$LIBFFI_VERSION.tar.gz"
+install_prebuilt_library "libffi" "$LIBFFI_VERSION" $LIBFFI_URL "libffi-$LIBFFI_VERSION" "--enable-static=no"
+if [ -e $CACHE_DIR/libffi-$LIBFFI_VERSION/libs ]; then
   echo "-----> Move libffi files into the correct locations" # See https://github.com/atgreen/libffi/issues/55 & https://github.com/atgreen/libffi/issues/24
-  rm -rf $CACHE_DIR/libffi-3.0.13/ghc-libs/*
-  mv $CACHE_DIR/libffi-3.0.13/libs/*.so* $CACHE_DIR/libffi-3.0.13/ghc-libs/
-  mv $CACHE_DIR/libffi-3.0.13/libs/*.h $CACHE_DIR/libffi-3.0.13/ghc-includes/
-  cp $CACHE_DIR/libffi-3.0.13/ghc-libs/* $WORKING_HOME/vendor/ghc-libs/
-  cp $CACHE_DIR/libffi-3.0.13/ghc-includes/* $WORKING_HOME/vendor/ghc-includes/
-  rm -rf $CACHE_DIR/libffi-3.0.13/libs
+  rm -rf $CACHE_DIR/libffi-$LIBFFI_VERSION/ghc-libs/*
+  mv $CACHE_DIR/libffi-$LIBFFI_VERSION/libs/*.so* $CACHE_DIR/libffi-$LIBFFI_VERSION/ghc-libs/
+  mv $CACHE_DIR/libffi-$LIBFFI_VERSION/libs/*.h $CACHE_DIR/libffi-$LIBFFI_VERSION/ghc-includes/
+  cp $CACHE_DIR/libffi-$LIBFFI_VERSION/ghc-libs/* $WORKING_HOME/vendor/ghc-libs/
+  cp $CACHE_DIR/libffi-$LIBFFI_VERSION/ghc-includes/* $WORKING_HOME/vendor/ghc-includes/
+  rm -rf $CACHE_DIR/libffi-$LIBFFI_VERSION/libs
 fi
 
 LIBPCRE_URL="http://iweb.dl.sourceforge.net/project/pcre/pcre/8.35/pcre-8.35.tar.gz"
